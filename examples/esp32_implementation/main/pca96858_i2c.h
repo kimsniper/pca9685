@@ -38,22 +38,29 @@ extern "C" {
 
 #include "pca96858_i2c_hal.h" 
 
-/*
 typedef struct{
-    uint16_t dig_t1;
-    int16_t dig_t2;
-    int16_t dig_t3;
-    uint16_t dig_p1;
-    int16_t dig_p2;
-    int16_t dig_p3;
-    int16_t dig_p4;
-    int16_t dig_p5;
-    int16_t dig_p6;
-    int16_t dig_p7;
-    int16_t dig_p8;
-    int16_t dig_p9;
-} pca96858_calib_t;
-*/
+    uint8_t restart : 1;
+    uint8_t extclk : 1;
+    uint8_t auto_increment : 1;
+    uint8_t sub_1 : 1;
+    uint8_t sub_2 : 1;
+    uint8_t sub_3 : 1;
+    uint8_t all_call : 1;
+} pca96858_mode1_t;
+
+typedef struct{
+    uint8_t invrt : 1;
+    uint8_t och : 1;
+    uint8_t outdrv : 1;
+    uint8_t outne : 2;
+} pca96858_mode2_t;
+
+typedef struct{
+    uint8_t led_no;
+    uint8_t och : 1;
+    uint8_t outdrv : 1;
+    uint8_t outne : 2;
+} pca96858_pwm_t;
 
 /**
  * @brief PCA9685 device address.
@@ -65,26 +72,66 @@ typedef struct{
  * @brief PCA9685 command code registers.
  * @details R/W Command registers
  */
-#define REG_CALIB                       0x88
-#define REG_ID_PARTNUMBER               0xD0
-#define REG_RESET                       0xE0
-#define REG_STATUS                      0xF3
-#define REG_CTRL_MEAS                   0xF4
-#define REG_CONFIG                      0xF5
-#define REG_PRESS_READ                  0xF7
-#define REG_TEMP_READ                   0xFA
+#define REG_MODE_1                      0x00
+#define REG_MODE_2                      0x01
+#define REG_SUBADR_1                    0x02
+#define REG_SUBADR_2                    0x03
+#define REG_SUBADR_3                    0x04
+#define REG_ALLCALLADR                  0x05
+#define REG_ALL_LED_ON                  0xFA
+#define REG_ALL_LED_OFF                 0xFC
+#define REG_PRE_SCALE                   0xFE
+#define REG_TEST_MODE                   0xFF
+
+/**
+ * @brief PCA9685 MODE_1 register bit description.
+ * @details R/W Command registers
+ */
+#define MODE_1_RESTART_EN               0x01
+#define MODE_1_EXT_CLOCK                0x01
+#define MODE_1_INT_CLOCK                0x00
+#define MODE_1_AUTO_INCREMENT_EN        0x01
+#define MODE_1_AUTO_INCREMENT_DIS       0x00
+#define MODE_1_SLEEP_NORMAL             0x01
+#define MODE_1_SLEEP_LOW_POWER          0x00
+#define MODE_1_SUB_1_RESPOND            0x01
+#define MODE_1_SUB_2_RESPOND            0x01
+#define MODE_1_SUB_3_RESPOND            0x01
+#define MODE_1_ALLCALL_RESPOND          0x01
+
+/**
+ * @brief PCA9685 MODE_2 register bit description.
+ * @details R/W Command registers
+ */
+#define MODE_2_INVRT                    0x01
+#define MODE_2_NOT_INVRT                0x00
+#define MODE_2_OCH_STOP                 0x01
+#define MODE_2_OCH_ACK                  0x00
+#define MODE_2_OUTDRV_TOTEM             0x01
+#define MODE_2_OUTDRV_OPEN              0x00
+#define MODE_2_OUTNE_LEDEN_LOW          0x00
+#define MODE_2_OUTNE_LEDEN_HIGH         0x01
+#define MODE_2_OUTNE_LEDEN_HIGHZ        0x02
+
+/**
+ * @brief PCA9685 macros
+ * @details Other macros
+ */
+#define LED_OFFSET_ADR                  0x05
+#define STAB_TIME                       1     //Stabilization time (ms)
+
 
 /**
  * @brief PCA9685 calibration setting.
  * @details Set global parameter calibration values.
  */
-//pca96858_err_t pca96858_i2c_write_ctrl_meas(pca96858_ctrl_meas_t cfg);
+pca96858_err_t pca96858_i2c_read_mode_1(uint8_t *mode);
 
 /**
  * @brief PCA9685 calibration setting.
  * @details Set global parameter calibration values.
  */
-//pca96858_err_t pca96858_i2c_read_ctrl_meas(pca96858_ctrl_meas_t *cfg);
+pca96858_err_t pca96858_i2c_write_mode_1(pca96858_mode1_t cfg);
 
 #ifdef __cplusplus
 }

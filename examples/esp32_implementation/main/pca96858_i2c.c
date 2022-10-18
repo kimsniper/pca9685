@@ -29,13 +29,39 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
+#include "math.h"
+
 #include "pca96858_i2c.h" 
 #include "pca96858_i2c_hal.h" 
 
-/*
-pca96858_err_t pca96858_i2c_write_ctrl_meas(pca96858_ctrl_meas_t cfg)
+pca96858_err_t pca96858_i2c_read_mode_1(uint8_t *mode)
 {
-    uint8_t reg = REG_CTRL_MEAS;
+    uint8_t reg = REG_MODE_1;
+    pca96858_err_t err = pca96858_i2c_hal_read(I2C_ADDRESS_PCA9685, &reg, mode, 1);
+    return err;
+}
+
+pca96858_err_t pca96858_i2c_restart()
+{
+    uint8_t reg = REG_MODE_1;
+    uint8_t mode;
+    if(pca96858_i2c_read_mode_1(&mode) != PCA9685_OK && !(mode & (1 << 7)))
+        return PCA9685_ERR;
+    uint8_t data[2];
+    data[0] = reg;
+    data[1] = mode | (mode & ~(1 << 4));
+    pca96858_err_t err = pca96858_i2c_hal_write(I2C_ADDRESS_PCA9685, data, sizeof(data));
+    pca96858_i2c_hal_ms_delay(STAB_TIME);
+    if(pca96858_i2c_read_mode_1(&mode) != PCA9685_OK)
+        return PCA9685_ERR;
+    data[1] = mode | (mode & (1 << 7));
+    err += pca96858_i2c_hal_write(I2C_ADDRESS_PCA9685, data, sizeof(data));
+    return err;
+}
+
+pca96858_err_t pca96858_i2c_restart()
+{
+    uint8_t reg = REG_MODE_1;
     uint8_t data[2];
     data[0] = reg;
     data[1] = (cfg.osrs_tmp << 7) | (cfg.osrs_press << 4) | cfg.mode;
@@ -43,14 +69,12 @@ pca96858_err_t pca96858_i2c_write_ctrl_meas(pca96858_ctrl_meas_t cfg)
     return err;
 }
 
-pca96858_err_t pca96858_i2c_read_ctrl_meas(pca96858_ctrl_meas_t *cfg)
+pca96858_err_t pca96858_i2c_pwm()
 {
-    uint8_t reg = REG_CTRL_MEAS;
-    uint8_t data;
-    pca96858_err_t err = pca96858_i2c_hal_read(I2C_ADDRESS_PCA9685, &reg, &data, 1);
-    cfg->osrs_tmp = (data & 0xE0) >> 5;
-    cfg->osrs_press = (data & 0x1C) >> 2;
-    cfg->mode = data & 0x03;
+    uint8_t reg = REG_MODE_1;
+    uint8_t data[2];
+    data[0] = reg;
+    data[1] = (cfg.osrs_tmp << 7) | (cfg.osrs_press << 4) | cfg.mode;
+    pca96858_err_t err = pca96858_i2c_hal_write(I2C_ADDRESS_PCA9685, data, sizeof(data));
     return err;
 }
-*/
