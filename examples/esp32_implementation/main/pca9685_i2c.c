@@ -62,7 +62,7 @@ pca9685_err_t pca9685_i2c_restart()
 pca9685_err_t pca9685_i2c_led_set(pca9685_led_t led)
 {
     uint8_t reg = (led.led_no * 4) + LED_OFFSET_ADR;
-    uint8_t data[5];
+    uint8_t data[5] = {0};
     data[0] = reg;
     data[2] = 1 << 4;
     if (led.state == PCA9685_LED_OFF)
@@ -83,5 +83,26 @@ pca9685_err_t pca9685_i2c_led_pwm_set(pca9685_led_pwm_t led)
     data[4] = led.led_OFF >> 8;
 
     pca9685_err_t err = pca9685_i2c_hal_write(I2C_ADDRESS_PCA9685, data, sizeof(data));
+    return err;
+}
+
+pca9685_err_t pca9685_i2c_write_pre_scale(uint16_t frequency)
+{
+    uint8_t reg = REG_PRE_SCALE;
+    uint8_t data[2];
+    data[0] = reg;
+    data[1] = round((25 * 1000 * 1000) / (4096 * frequency)) - 1;
+
+    pca9685_err_t err = pca9685_i2c_hal_write(I2C_ADDRESS_PCA9685, data, sizeof(data));
+    return err;
+}
+
+pca9685_err_t pca9685_i2c_read_pre_scale(uint16_t *frequency)
+{
+    uint8_t reg = REG_PRE_SCALE;
+    uint8_t data;
+    pca9685_err_t err = pca9685_i2c_hal_read(I2C_ADDRESS_PCA9685, &reg, &data, 1);
+    *frequency = round((25 * 1000 * 1000) / (4096 * (data + 1))); 
+
     return err;
 }
