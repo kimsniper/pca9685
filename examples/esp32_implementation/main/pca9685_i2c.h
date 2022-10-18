@@ -29,38 +29,48 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-#ifndef MAIN_PCA96858_I2C
-#define MAIN_PCA96858_I2C
+#ifndef MAIN_PCA9685_I2C
+#define MAIN_PCA9685_I2C
 
 #ifdef __cplusplus
 extern "C" {
 #endif
 
-#include "pca96858_i2c_hal.h" 
+#include "pca9685_i2c_hal.h" 
 
 typedef struct{
     uint8_t restart : 1;
     uint8_t extclk : 1;
     uint8_t auto_increment : 1;
+    uint8_t sleep : 1;
     uint8_t sub_1 : 1;
     uint8_t sub_2 : 1;
     uint8_t sub_3 : 1;
     uint8_t all_call : 1;
-} pca96858_mode1_t;
+} pca9685_mode1_t;
 
 typedef struct{
     uint8_t invrt : 1;
     uint8_t och : 1;
     uint8_t outdrv : 1;
     uint8_t outne : 2;
-} pca96858_mode2_t;
+} pca9685_mode2_t;
 
 typedef struct{
     uint8_t led_no;
-    uint8_t och : 1;
-    uint8_t outdrv : 1;
-    uint8_t outne : 2;
-} pca96858_pwm_t;
+    uint16_t led_ON;
+    uint16_t led_OFF;
+} pca9685_led_pwm_t;
+
+typedef enum{
+    PCA9685_LED_OFF,
+    PCA9685_LED_ON,
+} pca9685_led_state_t;
+
+typedef struct{
+    uint8_t led_no;
+    pca9685_led_state_t state;
+} pca9685_led_t;
 
 /**
  * @brief PCA9685 device address.
@@ -117,7 +127,7 @@ typedef struct{
  * @brief PCA9685 macros
  * @details Other macros
  */
-#define LED_OFFSET_ADR                  0x05
+#define LED_OFFSET_ADR                  0x06
 #define STAB_TIME                       1     //Stabilization time (ms)
 
 
@@ -125,16 +135,16 @@ typedef struct{
  * @brief PCA9685 calibration setting.
  * @details Set global parameter calibration values.
  */
-pca96858_err_t pca96858_i2c_read_mode_1(uint8_t *mode);
+pca9685_err_t pca9685_i2c_read_mode_1(uint8_t *mode);
 
 /**
  * @brief PCA9685 calibration setting.
  * @details Set global parameter calibration values.
  */
-pca96858_err_t pca96858_i2c_write_mode_1(pca96858_mode1_t cfg);
+pca9685_err_t pca9685_i2c_write_mode_1(pca9685_mode1_t cfg);
 
 #ifdef __cplusplus
 }
 #endif
 
-#endif /* MAIN_PCA96858_I2C */
+#endif /* MAIN_PCA9685_I2C */

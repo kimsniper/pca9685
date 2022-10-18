@@ -29,8 +29,8 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-#ifndef MAIN_PCA96858_I2C_HAL
-#define MAIN_PCA96858_I2C_HAL
+#ifndef MAIN_PCA9685_I2C_HAL
+#define MAIN_PCA9685_I2C_HAL
 
 #ifdef __cplusplus
 extern "C" {
@@ -41,34 +41,34 @@ extern "C" {
 typedef enum{
     PCA9685_ERR = -1,
     PCA9685_OK,
-} pca96858_err_t;
+} pca9685_err_t;
 
 /**
  * @brief User implementation for I2C initialization.
  * @details To be implemented by user based on hardware platform.
  */
-pca96858_err_t pca96858_i2c_hal_init();
+pca9685_err_t pca9685_i2c_hal_init();
 
 /**
  * @brief User implementation for I2C read.
  * @details To be implemented by user based on hardware platform.
  */
-pca96858_err_t pca96858_i2c_hal_read(uint8_t address, uint8_t *reg, uint8_t *data, uint16_t count);
+pca9685_err_t pca9685_i2c_hal_read(uint8_t address, uint8_t *reg, uint8_t *data, uint16_t count);
 
 /**
  * @brief User implementation for I2C write.
  * @details To be implemented by user based on hardware platform.
  */
-pca96858_err_t pca96858_i2c_hal_write(uint8_t address, uint8_t *data, uint16_t count);
+pca9685_err_t pca9685_i2c_hal_write(uint8_t address, uint8_t *data, uint16_t count);
 
 /**
  * @brief User implementation for milliseconds delay.
  * @details To be implemented by user based on hardware platform.
  */
-void pca96858_i2c_hal_ms_delay(uint32_t ms);
+void pca9685_i2c_hal_ms_delay(uint32_t ms);
 
 #ifdef __cplusplus
 }
 #endif
 
-#endif /* MAIN_PCA96858_I2C_HAL */
+#endif /* MAIN_PCA9685_I2C_HAL */

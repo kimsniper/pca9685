@@ -31,50 +31,57 @@
 
 #include "math.h"
 
-#include "pca96858_i2c.h" 
-#include "pca96858_i2c_hal.h" 
+#include "pca9685_i2c.h" 
+#include "pca9685_i2c_hal.h" 
 
-pca96858_err_t pca96858_i2c_read_mode_1(uint8_t *mode)
+pca9685_err_t pca9685_i2c_read_mode_1(uint8_t *mode)
 {
     uint8_t reg = REG_MODE_1;
-    pca96858_err_t err = pca96858_i2c_hal_read(I2C_ADDRESS_PCA9685, &reg, mode, 1);
+    pca9685_err_t err = pca9685_i2c_hal_read(I2C_ADDRESS_PCA9685, &reg, mode, 1);
     return err;
 }
 
-pca96858_err_t pca96858_i2c_restart()
+pca9685_err_t pca9685_i2c_restart()
 {
     uint8_t reg = REG_MODE_1;
     uint8_t mode;
-    if(pca96858_i2c_read_mode_1(&mode) != PCA9685_OK && !(mode & (1 << 7)))
+    if(pca9685_i2c_read_mode_1(&mode) != PCA9685_OK && !(mode & (1 << 7)))
         return PCA9685_ERR;
     uint8_t data[2];
     data[0] = reg;
     data[1] = mode | (mode & ~(1 << 4));
-    pca96858_err_t err = pca96858_i2c_hal_write(I2C_ADDRESS_PCA9685, data, sizeof(data));
-    pca96858_i2c_hal_ms_delay(STAB_TIME);
-    if(pca96858_i2c_read_mode_1(&mode) != PCA9685_OK)
+    pca9685_err_t err = pca9685_i2c_hal_write(I2C_ADDRESS_PCA9685, data, sizeof(data));
+    pca9685_i2c_hal_ms_delay(STAB_TIME);
+    if(pca9685_i2c_read_mode_1(&mode) != PCA9685_OK)
         return PCA9685_ERR;
     data[1] = mode | (mode & (1 << 7));
-    err += pca96858_i2c_hal_write(I2C_ADDRESS_PCA9685, data, sizeof(data));
+    err += pca9685_i2c_hal_write(I2C_ADDRESS_PCA9685, data, sizeof(data));
     return err;
 }
 
-pca96858_err_t pca96858_i2c_restart()
+pca9685_err_t pca9685_i2c_led_set(pca9685_led_t led)
 {
-    uint8_t reg = REG_MODE_1;
-    uint8_t data[2];
+    uint8_t reg = (led.led_no * 4) + LED_OFFSET_ADR;
+    uint8_t data[5];
     data[0] = reg;
-    data[1] = (cfg.osrs_tmp << 7) | (cfg.osrs_press << 4) | cfg.mode;
-    pca96858_err_t err = pca96858_i2c_hal_write(I2C_ADDRESS_PCA9685, data, sizeof(data));
+    data[2] = 1 << 4;
+    if (led.state == PCA9685_LED_OFF)
+        data[4] = 1 << 4;
+
+    pca9685_err_t err = pca9685_i2c_hal_write(I2C_ADDRESS_PCA9685, data, sizeof(data));
     return err;
 }
 
-pca96858_err_t pca96858_i2c_pwm()
+pca9685_err_t pca9685_i2c_led_pwm_set(pca9685_led_pwm_t led)
 {
-    uint8_t reg = REG_MODE_1;
-    uint8_t data[2];
+    uint8_t reg = (led.led_no * 4) + LED_OFFSET_ADR;
+    uint8_t data[5];
     data[0] = reg;
-    data[1] = (cfg.osrs_tmp << 7) | (cfg.osrs_press << 4) | cfg.mode;
-    pca96858_err_t err = pca96858_i2c_hal_write(I2C_ADDRESS_PCA9685, data, sizeof(data));
+    data[1] = led.led_ON & 0xFF;
+    data[2] = led.led_ON >> 8;
+    data[3] = led.led_OFF & 0xFF;
+    data[4] = led.led_OFF >> 8;
+
+    pca9685_err_t err = pca9685_i2c_hal_write(I2C_ADDRESS_PCA9685, data, sizeof(data));
     return err;
 }

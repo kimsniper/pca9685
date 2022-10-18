@@ -3,6 +3,6 @@
 # project subdirectory.
 #
 
-PROJECT_NAME := pca96858
+PROJECT_NAME := pca9685
 
 include $(IDF_PATH)/make/project.mk
