@@ -81,6 +81,17 @@ typedef struct{
     pca9685_led_state_t state;
 } pca9685_led_t;
 
+typedef enum{
+    PCA9685_OUTPUT_NOTINVERT,
+    PCA9685_OUTPUT_INVERT,
+} pca9685_output_invert_t;
+
+typedef enum{
+    PCA9685_OUTPUT_LOW,
+    PCA9685_OUTPUT_HIGH,
+    PCA9685_OUTPUT_HIGH_IMPEDANCE,
+} pca9685_output_enable_t;
+
 /**
  * @brief PCA9685 device address.
  * @details PCA9685 I2C slave address.
@@ -125,8 +136,6 @@ typedef struct{
  * @brief PCA9685 MODE_2 register bit description.
  * @details R/W Command registers
  */
-#define MODE_2_INVRT                    0x01
-#define MODE_2_NOT_INVRT                0x00
 #define MODE_2_OCH_STOP                 0x01
 #define MODE_2_OCH_ACK                  0x00
 #define MODE_2_OUTDRV_TOTEM             0x01
