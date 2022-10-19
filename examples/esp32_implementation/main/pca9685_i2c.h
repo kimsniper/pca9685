@@ -62,9 +62,13 @@ typedef struct{
 } pca9685_mode2_t;
 
 typedef struct{
-    uint8_t led_no;
     uint16_t led_ON;
     uint16_t led_OFF;
+} pca9685_pwm_cycle_t;
+
+typedef struct{
+    uint8_t led_no;
+    pca9685_pwm_cycle_t cycle;
 } pca9685_led_pwm_t;
 
 typedef enum{
@@ -91,8 +95,7 @@ typedef struct{
 #define REG_MODE_1                      0x00
 #define REG_MODE_2                      0x01
 #define REG_ALLCALLADR                  0x05
-#define REG_ALL_LED_ON                  0xFA
-#define REG_ALL_LED_OFF                 0xFC
+#define REG_ALL_LED                     0xFA
 #define REG_PRE_SCALE                   0xFE
 #define REG_TEST_MODE                   0xFF
 

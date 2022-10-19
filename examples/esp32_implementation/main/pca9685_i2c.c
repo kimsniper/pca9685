@@ -59,10 +59,21 @@ pca9685_err_t pca9685_i2c_restart()
     return err;
 }
 
+pca9685_err_t pca9685_i2c_reset()
+{
+    uint8_t reg = REG_RESET;
+    uint8_t data[2];
+    data[0] = reg;
+    data[1] = SWRST;
+
+    pca9685_err_t err = pca9685_i2c_hal_write(I2C_ADDRESS_PCA9685, data, sizeof(data));
+    return err;
+}
+
 pca9685_err_t pca9685_i2c_led_set(pca9685_led_t led)
 {
     uint8_t reg = (led.led_no * 4) + LED_OFFSET_ADR;
-    uint8_t data[5] = {0};
+    uint8_t data[5];
     data[0] = reg;
     data[2] = 1 << 4;
     if (led.state == PCA9685_LED_OFF)
@@ -77,10 +88,37 @@ pca9685_err_t pca9685_i2c_led_pwm_set(pca9685_led_pwm_t led)
     uint8_t reg = (led.led_no * 4) + LED_OFFSET_ADR;
     uint8_t data[5];
     data[0] = reg;
-    data[1] = led.led_ON & 0xFF;
-    data[2] = led.led_ON >> 8;
-    data[3] = led.led_OFF & 0xFF;
-    data[4] = led.led_OFF >> 8;
+    data[1] = led.cycle.led_ON & 0xFF;
+    data[2] = led.cycle.led_ON >> 8;
+    data[3] = led.cycle.led_OFF & 0xFF;
+    data[4] = led.cycle.led_OFF >> 8;
+
+    pca9685_err_t err = pca9685_i2c_hal_write(I2C_ADDRESS_PCA9685, data, sizeof(data));
+    return err;
+}
+
+pca9685_err_t pca9685_i2c_all_led_set(pca9685_led_state_t state)
+{
+    uint8_t reg = REG_ALL_LED;
+    uint8_t data[5];
+    data[0] = reg;
+    data[2] = 1 << 4;
+    if (state == PCA9685_LED_OFF)
+        data[4] = 1 << 4;
+
+    pca9685_err_t err = pca9685_i2c_hal_write(I2C_ADDRESS_PCA9685, data, sizeof(data));
+    return err;
+}
+
+pca9685_err_t pca9685_i2c_all_led_pwm_set(pca9685_pwm_cycle_t cycle)
+{
+    uint8_t reg = REG_ALL_LED;
+    uint8_t data[5];
+    data[0] = reg;
+    data[1] = cycle.led_ON & 0xFF;
+    data[2] = cycle.led_ON >> 8;
+    data[3] = cycle.led_OFF & 0xFF;
+    data[4] = cycle.led_OFF >> 8;
 
     pca9685_err_t err = pca9685_i2c_hal_write(I2C_ADDRESS_PCA9685, data, sizeof(data));
     return err;
@@ -144,16 +182,5 @@ pca9685_err_t pca9685_i2c_read_sub_addr(pca9685_subaddr_t *subaddr)
     pca9685_err_t err = pca9685_i2c_hal_read(I2C_ADDRESS_PCA9685, &reg, &data, 1);
     subaddr->address = subaddr->address >> 1;
 
-    return err;
-}
-
-pca9685_err_t pca9685_i2c_reset()
-{
-    uint8_t reg = REG_RESET;
-    uint8_t data[2];
-    data[0] = reg;
-    data[1] = SWRST;
-
-    pca9685_err_t err = pca9685_i2c_hal_write(I2C_ADDRESS_PCA9685, data, sizeof(data));
     return err;
 }
