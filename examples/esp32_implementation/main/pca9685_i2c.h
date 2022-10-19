@@ -92,6 +92,11 @@ typedef enum{
     PCA9685_OUTPUT_HIGH_IMPEDANCE,
 } pca9685_output_enable_t;
 
+typedef enum{
+    PCA9685_OUTPUT_OPEN_DRAIN,
+    PCA9685_OUTPUT_TOTEM_POLE,
+} pca9685_output_drive_t;
+
 /**
  * @brief PCA9685 device address.
  * @details PCA9685 I2C slave address.

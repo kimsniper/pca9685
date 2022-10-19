@@ -111,6 +111,23 @@ pca9685_err_t pca9685_i2c_output_enable(pca9685_output_enable_t val)
     return err;
 }
 
+pca9685_err_t pca9685_i2c_output_drive(pca9685_output_drive_t val)
+{
+    uint8_t reg = REG_MODE_2;
+    uint8_t data[2];
+    uint8_t mode;
+    
+    pca9685_err_t err = pca9685_i2c_read_mode_2(&mode);
+    if(err != PCA9685_OK)
+        return err;
+
+    data[0] = reg;
+    data[1] = mode | (val << 2);
+
+    err += pca9685_i2c_hal_write(I2C_ADDRESS_PCA9685, data, sizeof(data));
+    return err;
+}
+
 pca9685_err_t pca9685_i2c_led_set(pca9685_led_t led)
 {
     uint8_t reg = (led.led_no * 4) + LED_OFFSET_ADR;
