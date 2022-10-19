@@ -17,8 +17,8 @@ void app_main(void)
 
     pca9685_i2c_hal_init();
 
-    //err = pca9685_i2c_reset();
-    //if(err != ESP_OK) ESP_LOGE(TAG, "Error setting the device!");
+    err = pca9685_i2c_reset();
+    if(err != ESP_OK) ESP_LOGE(TAG, "Error resetting the device!");
 
     if (err == ESP_OK)
     {

@@ -146,3 +146,14 @@ pca9685_err_t pca9685_i2c_read_sub_addr(pca9685_subaddr_t *subaddr)
 
     return err;
 }
+
+pca9685_err_t pca9685_i2c_reset()
+{
+    uint8_t reg = REG_RESET;
+    uint8_t data[2];
+    data[0] = reg;
+    data[1] = SWRST;
+
+    pca9685_err_t err = pca9685_i2c_hal_write(I2C_ADDRESS_PCA9685, data, sizeof(data));
+    return err;
+}

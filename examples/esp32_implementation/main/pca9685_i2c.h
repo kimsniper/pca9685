@@ -87,6 +87,7 @@ typedef struct{
  * @brief PCA9685 command code registers.
  * @details R/W Command registers
  */
+#define REG_RESET                       0x00
 #define REG_MODE_1                      0x00
 #define REG_MODE_2                      0x01
 #define REG_ALLCALLADR                  0x05
@@ -94,6 +95,12 @@ typedef struct{
 #define REG_ALL_LED_OFF                 0xFC
 #define REG_PRE_SCALE                   0xFE
 #define REG_TEST_MODE                   0xFF
+
+/**
+ * @brief PCA9685 SWRST command.
+ * @details R/W Command registers
+ */
+#define SWRST                           0x06
 
 /**
  * @brief PCA9685 MODE_1 register bit description.
@@ -145,6 +152,12 @@ pca9685_err_t pca9685_i2c_read_mode_1(uint8_t *mode);
  * @details Set global parameter calibration values.
  */
 pca9685_err_t pca9685_i2c_write_mode_1(pca9685_mode1_t cfg);
+
+/**
+ * @brief PCA9685 software reset.
+ * @details Reset device.
+ */
+pca9685_err_t pca9685_i2c_reset();
 
 #ifdef __cplusplus
 }
