@@ -39,6 +39,11 @@ extern "C" {
 #include "pca9685_i2c_hal.h" 
 
 typedef struct{
+    uint8_t addr_no;
+    uint8_t address;
+} pca9685_subaddr_t;
+
+typedef struct{
     uint8_t restart : 1;
     uint8_t extclk : 1;
     uint8_t auto_increment : 1;
@@ -84,9 +89,6 @@ typedef struct{
  */
 #define REG_MODE_1                      0x00
 #define REG_MODE_2                      0x01
-#define REG_SUBADR_1                    0x02
-#define REG_SUBADR_2                    0x03
-#define REG_SUBADR_3                    0x04
 #define REG_ALLCALLADR                  0x05
 #define REG_ALL_LED_ON                  0xFA
 #define REG_ALL_LED_OFF                 0xFC
@@ -128,6 +130,7 @@ typedef struct{
  * @details Other macros
  */
 #define LED_OFFSET_ADR                  0x06
+#define SUBADR_OFFSET_ADR               0x01
 #define STAB_TIME                       1     //Stabilization time (ms)
 
 

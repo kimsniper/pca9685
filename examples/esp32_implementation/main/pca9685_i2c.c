@@ -106,3 +106,43 @@ pca9685_err_t pca9685_i2c_read_pre_scale(uint16_t *frequency)
 
     return err;
 }
+
+pca9685_err_t pca9685_i2c_write_allcall_addr(uint8_t addr)
+{
+    uint8_t reg = REG_ALLCALLADR;
+    uint8_t data[2];
+    data[0] = reg;
+    data[1] = addr << 1;
+
+    pca9685_err_t err = pca9685_i2c_hal_write(I2C_ADDRESS_PCA9685, data, sizeof(data));
+    return err;
+}
+
+pca9685_err_t pca9685_i2c_read_allcall_addr(uint8_t *addr)
+{
+    uint8_t reg = REG_ALLCALLADR;
+    pca9685_err_t err = pca9685_i2c_hal_read(I2C_ADDRESS_PCA9685, &reg, addr, 1);
+
+    return err;
+}
+
+pca9685_err_t pca9685_i2c_write_sub_addr(pca9685_subaddr_t subaddr)
+{
+    uint8_t reg = subaddr.addr_no + SUBADR_OFFSET_ADR;
+    uint8_t data[2];
+    data[0] = reg;
+    data[1] = subaddr.address << 1;
+
+    pca9685_err_t err = pca9685_i2c_hal_write(I2C_ADDRESS_PCA9685, data, sizeof(data));
+    return err;
+}
+
+pca9685_err_t pca9685_i2c_read_sub_addr(pca9685_subaddr_t *subaddr)
+{
+    uint8_t reg = subaddr->addr_no + SUBADR_OFFSET_ADR;
+    uint8_t data;
+    pca9685_err_t err = pca9685_i2c_hal_read(I2C_ADDRESS_PCA9685, &reg, &data, 1);
+    subaddr->address = subaddr->address >> 1;
+
+    return err;
+}
