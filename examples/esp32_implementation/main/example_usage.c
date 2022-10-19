@@ -12,23 +12,15 @@ static const char *TAG = "example_usage";
 
 void app_main(void)
 {
-    esp_err_t err;
+    esp_err_t err = ESP_OK;
     uint8_t id = 0;
 
     pca9685_i2c_hal_init();
 
-    err = pca9685_i2c_reset();
-    if(err != ESP_OK) ESP_LOGE(TAG, "Error setting the device!");
+    //err = pca9685_i2c_reset();
+    //if(err != ESP_OK) ESP_LOGE(TAG, "Error setting the device!");
 
-    err += pca9685_i2c_read_part_number(&id);
-    if(err == ESP_OK){
-        ESP_LOGI(TAG, "Part number: 0x%02x", id);
-    } 
-    else{
-        ESP_LOGE(TAG, "Unable to read part number!");
-    } 
-
-    if (err == ESP_OK && id == 0x58)
+    if (err == ESP_OK)
     {
         ESP_LOGI(TAG, "PCA9685 initialization successful");
         while(1)
