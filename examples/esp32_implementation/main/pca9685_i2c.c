@@ -34,6 +34,8 @@
 #include "pca9685_i2c.h" 
 #include "pca9685_i2c_hal.h" 
 
+#include "stdio.h"
+
 pca9685_err_t pca9685_i2c_read_mode_1(uint8_t *mode)
 {
     uint8_t reg = REG_MODE_1;
@@ -188,7 +190,7 @@ pca9685_err_t pca9685_i2c_write_pre_scale(uint16_t frequency)
     uint8_t data[2];
     data[0] = reg;
     data[1] = round((25 * 1000 * 1000) / (4096 * frequency)) - 1;
-
+    printf("data[1]: %d", data[1]);
     pca9685_err_t err = pca9685_i2c_hal_write(I2C_ADDRESS_PCA9685, data, sizeof(data));
     return err;
 }

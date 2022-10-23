@@ -101,7 +101,7 @@ typedef enum{
  * @brief PCA9685 device address.
  * @details PCA9685 I2C slave address.
  */
-#define I2C_ADDRESS_PCA9685             0x76
+#define I2C_ADDRESS_PCA9685             0x40
 
 /**
  * @brief PCA9685 command code registers.
@@ -175,6 +175,10 @@ pca9685_err_t pca9685_i2c_write_mode_1(pca9685_mode1_t cfg);
  * @details Reset device.
  */
 pca9685_err_t pca9685_i2c_reset();
+
+pca9685_err_t pca9685_i2c_read_pre_scale(uint16_t *frequency);
+
+pca9685_err_t pca9685_i2c_write_pre_scale(uint16_t frequency);
 
 #ifdef __cplusplus
 }
