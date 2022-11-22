@@ -98,14 +98,12 @@ typedef enum{
 } pca9685_output_drive_t;
 
 /**
- * @brief PCA9685 device address.
- * @details PCA9685 I2C slave address.
+ * @brief PCA9685 I2C slave address
  */
 #define I2C_ADDRESS_PCA9685             0x40
 
 /**
- * @brief PCA9685 command code registers.
- * @details R/W Command registers
+ * @brief PCA9685 R/W Command registers
  */
 #define REG_RESET                       0x00
 #define REG_MODE_1                      0x00
@@ -116,14 +114,12 @@ typedef enum{
 #define REG_TEST_MODE                   0xFF
 
 /**
- * @brief PCA9685 SWRST command.
- * @details R/W Command registers
+ * @brief PCA9685 software reset command
  */
 #define SWRST                           0x06
 
 /**
- * @brief PCA9685 MODE_1 register bit description.
- * @details R/W Command registers
+ * @brief PCA9685 MODE_1 register bit description
  */
 #define MODE_1_RESTART_EN               0x01
 #define MODE_1_EXT_CLOCK                0x01
@@ -138,8 +134,7 @@ typedef enum{
 #define MODE_1_ALLCALL_RESPOND          0x01
 
 /**
- * @brief PCA9685 MODE_2 register bit description.
- * @details R/W Command registers
+ * @brief PCA9685 MODE_2 register bit description
  */
 #define MODE_2_OCH_STOP                 0x01
 #define MODE_2_OCH_ACK                  0x00
@@ -150,35 +145,84 @@ typedef enum{
 #define MODE_2_OUTNE_LEDEN_HIGHZ        0x02
 
 /**
- * @brief PCA9685 macros
- * @details Other macros
+ * @brief Other PCA9685 macros
  */
 #define LED_OFFSET_ADR                  0x06
 #define SUBADR_OFFSET_ADR               0x01
 #define STAB_TIME                       1     //Stabilization time (ms)
 
-
 /**
- * @brief PCA9685 calibration setting.
- * @details Set global parameter calibration values.
+ * @brief Read PCA9685 mode 1 register
  */
 pca9685_err_t pca9685_i2c_read_mode_1(uint8_t *mode);
 
 /**
- * @brief PCA9685 calibration setting.
- * @details Set global parameter calibration values.
+ * @brief Write PCA9685 mode 1 register
  */
-pca9685_err_t pca9685_i2c_write_mode_1(pca9685_mode1_t cfg);
+pca9685_err_t pca9685_i2c_read_mode_2(uint8_t *mode);
 
 /**
- * @brief PCA9685 software reset.
- * @details Reset device.
+ * @brief PCA9685 restart
+ */
+pca9685_err_t pca9685_i2c_restart();
+
+/**
+ * @brief PCA9685 reset
  */
 pca9685_err_t pca9685_i2c_reset();
 
+/**
+ * @brief Set/Reset PCA9685 output inversion
+ */
+pca9685_err_t pca9685_i2c_output_invert(pca9685_output_invert_t val);
+
+/**
+ * @brief Select PCA9685 output enable type
+ */
+pca9685_err_t pca9685_i2c_output_enable(pca9685_output_enable_t val);
+
+/**
+ * @brief Select PCA9685 output drive type
+ */
+pca9685_err_t pca9685_i2c_output_drive(pca9685_output_drive_t val);
+
+/**
+ * @brief Set PCA9685 LEDx HIGH/LOW output 
+ */
+pca9685_err_t pca9685_i2c_led_set(pca9685_led_t led);
+
+/**
+ * @brief Set PCA9685 all LEDs HIGH/LOW output 
+ */
+pca9685_err_t pca9685_i2c_all_led_set(pca9685_led_state_t state);
+
+/**
+ * @brief Set PCA9685 LEDx PWM output
+ */
+pca9685_err_t pca9685_i2c_led_pwm_set(pca9685_led_pwm_t led);
+
+/**
+ * @brief Set PCA9685 all LEDs PWM output
+ */
+pca9685_err_t pca9685_i2c_all_led_pwm_set(pca9685_pwm_cycle_t cycle);
+
+/**
+ * @brief Set PCA9685 pre scale
+ */
+pca9685_err_t pca9685_i2c_write_pre_scale(uint16_t frequency);
+
+/**
+ * @brief Read PCA9685 pre scale settings
+ */
 pca9685_err_t pca9685_i2c_read_pre_scale(uint16_t *frequency);
 
-pca9685_err_t pca9685_i2c_write_pre_scale(uint16_t frequency);
+pca9685_err_t pca9685_i2c_write_allcall_addr(uint8_t addr);
+
+pca9685_err_t pca9685_i2c_read_allcall_addr(uint8_t *addr);
+
+pca9685_err_t pca9685_i2c_write_sub_addr(pca9685_subaddr_t subaddr);
+
+pca9685_err_t pca9685_i2c_read_sub_addr(pca9685_subaddr_t *subaddr);
 
 #ifdef __cplusplus
 }

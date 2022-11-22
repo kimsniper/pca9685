@@ -44,26 +44,22 @@ typedef enum{
 } pca9685_err_t;
 
 /**
- * @brief User implementation for I2C initialization.
- * @details To be implemented by user based on hardware platform.
+ * @brief User implementation for I2C initialization
  */
 pca9685_err_t pca9685_i2c_hal_init();
 
 /**
- * @brief User implementation for I2C read.
- * @details To be implemented by user based on hardware platform.
+ * @brief User implementation for I2C read
  */
 pca9685_err_t pca9685_i2c_hal_read(uint8_t address, uint8_t *reg, uint8_t *data, uint16_t count);
 
 /**
- * @brief User implementation for I2C write.
- * @details To be implemented by user based on hardware platform.
+ * @brief User implementation for I2C write
  */
 pca9685_err_t pca9685_i2c_hal_write(uint8_t address, uint8_t *data, uint16_t count);
 
 /**
- * @brief User implementation for milliseconds delay.
- * @details To be implemented by user based on hardware platform.
+ * @brief User implementation for milliseconds delay
  */
 void pca9685_i2c_hal_ms_delay(uint32_t ms);
 

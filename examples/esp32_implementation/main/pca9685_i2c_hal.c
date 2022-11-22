@@ -47,6 +47,8 @@ pca9685_err_t pca9685_i2c_hal_init()
 {
     int err = PCA9685_OK;
 
+    //User implementation here
+
     int i2c_master_port = I2C_MASTER_NUM;
 
     i2c_config_t conf = {
@@ -69,6 +71,8 @@ pca9685_err_t pca9685_i2c_hal_read(uint8_t address, uint8_t *reg, uint8_t *data,
 {
     int err = PCA9685_OK;
 
+    //User implementation here
+
     i2c_cmd_handle_t cmd = i2c_cmd_link_create();
 	i2c_master_start(cmd);
 	i2c_master_write_byte(cmd, address << 1 | I2C_MASTER_WRITE, 1);
@@ -87,6 +91,8 @@ pca9685_err_t pca9685_i2c_hal_write(uint8_t address, uint8_t *data, uint16_t cou
 {
     int err = PCA9685_OK;
 
+    //User implementation here
+
     i2c_cmd_handle_t cmd = i2c_cmd_link_create();
     i2c_master_start(cmd);
     i2c_master_write_byte(cmd, (address << 1) | I2C_MASTER_WRITE, 1);
@@ -99,5 +105,6 @@ pca9685_err_t pca9685_i2c_hal_write(uint8_t address, uint8_t *data, uint16_t cou
 }
 
 void pca9685_i2c_hal_ms_delay(uint32_t ms) {
+    //User implementation here
     vTaskDelay(pdMS_TO_TICKS(ms));
 }
