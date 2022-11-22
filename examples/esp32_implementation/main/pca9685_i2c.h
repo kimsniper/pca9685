@@ -72,8 +72,8 @@ typedef struct{
 } pca9685_led_pwm_t;
 
 typedef enum{
-    PCA9685_LED_OFF,
-    PCA9685_LED_ON,
+    PCA9685_LED_OFF = 0x00,
+    PCA9685_LED_ON  = 0x01,
 } pca9685_led_state_t;
 
 typedef struct{
@@ -82,30 +82,32 @@ typedef struct{
 } pca9685_led_t;
 
 typedef enum{
-    PCA9685_SUBADDR_RESP_OFF,
-    PCA9685_SUBADDR_RESP_ON,
-} pca9685_sub_addr_resp_t;
-
-typedef struct{
-    uint8_t sub_addr_no;
-    pca9685_sub_addr_resp_t resp_state;
-} pca9685_sub_addr_t;
-
-typedef enum{
-    PCA9685_OUTPUT_NOTINVERT,
-    PCA9685_OUTPUT_INVERT,
+    PCA9685_OUTPUT_NOTINVERT = 0x00,
+    PCA9685_OUTPUT_INVERT = 0x01,
 } pca9685_output_invert_t;
 
 typedef enum{
-    PCA9685_OUTPUT_LOW,
-    PCA9685_OUTPUT_HIGH,
-    PCA9685_OUTPUT_HIGH_IMPEDANCE,
-} pca9685_output_enable_t;
+    PCA9685_CH_ONSTOP = 0x00,
+    PCA9685_CH_ONACK = 0x01,
+} pca9685_output_change_t;
 
 typedef enum{
-    PCA9685_OUTPUT_OPEN_DRAIN,
-    PCA9685_OUTPUT_TOTEM_POLE,
+    PCA9685_OUTPUT_LOW = 0x00,
+    PCA9685_OUTPUT_HIGH = 0x01,
+    PCA9685_OUTPUT_HIGH_IMPEDANCE = 0x02,
+} pca9685_output_not_enable_t;
+
+typedef enum{
+    PCA9685_OUTPUT_OPEN_DRAIN = 0x00,
+    PCA9685_OUTPUT_TOTEM_POLE = 0x01,
 } pca9685_output_drive_t;
+
+typedef struct{
+    pca9685_output_drive_t outdrv;
+    pca9685_output_not_enable_t outne;
+    pca9685_output_change_t och;
+    pca9685_output_invert_t invrt;
+} pca9685_output_set_t;
 
 /**
  * @brief PCA9685 I2C slave address
@@ -138,10 +140,11 @@ typedef enum{
 #define MODE_1_AUTO_INCREMENT_DIS       0x00
 #define MODE_1_SLEEP_NORMAL             0x01
 #define MODE_1_SLEEP_LOW_POWER          0x00
-#define MODE_1_SUB_1_RESPOND            0x01
-#define MODE_1_SUB_2_RESPOND            0x01
-#define MODE_1_SUB_3_RESPOND            0x01
-#define MODE_1_ALLCALL_RESPOND          0x01
+#define MODE_1_ADDR_RESPOND             0x01
+#define MODE_1_ADDR_NORESPOND           0x00
+#define MODE_1_SUB_ADDR_1               0x03
+#define MODE_1_SUB_ADDR_2               0x02
+#define MODE_1_SUB_ADDR_3               0x01
 
 /**
  * @brief PCA9685 MODE_2 register bit description
@@ -192,14 +195,19 @@ pca9685_err_t pca9685_i2c_reset();
 pca9685_err_t pca9685_i2c_output_invert(pca9685_output_invert_t val);
 
 /**
- * @brief Select PCA9685 output enable type
+ * @brief Select PCA9685 output not enable type
  */
-pca9685_err_t pca9685_i2c_output_enable(pca9685_output_enable_t val);
+pca9685_err_t pca9685_i2c_output_notenable(pca9685_output_enable_t setting);
 
 /**
  * @brief Select PCA9685 output drive type
  */
-pca9685_err_t pca9685_i2c_output_drive(pca9685_output_drive_t val);
+pca9685_err_t pca9685_i2c_output_drive(pca9685_output_drive_t setting);
+
+/**
+ * @brief Select PCA9685 output change type
+ */
+pca9685_err_t pca9685_i2c_output_change(pca9685_output_change_t setting)
 
 /**
  * @brief Set PCA9685 LEDx HIGH/LOW output 
