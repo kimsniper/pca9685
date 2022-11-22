@@ -50,6 +50,32 @@ pca9685_err_t pca9685_i2c_read_mode_2(uint8_t *mode)
     return err;
 }
 
+pca9685_err_t pca9685_i2c_autoincrement(uint8_t setting)
+{
+    uint8_t reg = REG_MODE_1;
+    uint8_t mode;
+    if(pca9685_i2c_read_mode_1(&mode) != PCA9685_OK)
+        return PCA9685_ERR;
+    uint8_t data[2];
+    data[0] = reg;
+    data[1] = mode | (setting << 5);
+    pca9685_err_t err = pca9685_i2c_hal_write(I2C_ADDRESS_PCA9685, data, sizeof(data));
+    return err;
+}
+
+pca9685_err_t pca9685_i2c_sub_address(pca9685_sub_addr_t sub_addr)
+{
+    uint8_t reg = REG_MODE_1;
+    uint8_t mode;
+    if(pca9685_i2c_read_mode_1(&mode) != PCA9685_OK)
+        return PCA9685_ERR;
+    uint8_t data[2];
+    data[0] = reg;
+    data[1] = mode | (sub_addr.resp_state << (3 % sub_addr.sub_addr_no));
+    pca9685_err_t err = pca9685_i2c_hal_write(I2C_ADDRESS_PCA9685, data, sizeof(data));
+    return err;
+}
+
 pca9685_err_t pca9685_i2c_restart()
 {
     uint8_t reg = REG_MODE_1;

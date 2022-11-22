@@ -82,6 +82,16 @@ typedef struct{
 } pca9685_led_t;
 
 typedef enum{
+    PCA9685_SUBADDR_RESP_OFF,
+    PCA9685_SUBADDR_RESP_ON,
+} pca9685_sub_addr_resp_t;
+
+typedef struct{
+    uint8_t sub_addr_no;
+    pca9685_sub_addr_resp_t resp_state;
+} pca9685_sub_addr_t;
+
+typedef enum{
     PCA9685_OUTPUT_NOTINVERT,
     PCA9685_OUTPUT_INVERT,
 } pca9685_output_invert_t;
@@ -160,6 +170,11 @@ pca9685_err_t pca9685_i2c_read_mode_1(uint8_t *mode);
  * @brief Write PCA9685 mode 1 register
  */
 pca9685_err_t pca9685_i2c_read_mode_2(uint8_t *mode);
+
+/**
+ * @brief Set PCA9685 register auto increment in mode 1 register
+ */
+pca9685_err_t pca9685_i2c_autoincrement(uint8_t setting);
 
 /**
  * @brief PCA9685 restart
