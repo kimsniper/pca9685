@@ -4,7 +4,7 @@
 #include "freertos/FreeRTOS.h"
 #include "freertos/task.h"
 
-//PCA9685 components
+/*  PCA9685 components  */
 #include "pca9685_i2c.h"
 #include "pca9685_i2c_hal.h"
 

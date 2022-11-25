@@ -40,7 +40,7 @@ extern "C" {
 
 typedef enum{
     PCA9685_ERR = -1,
-    PCA9685_OK,
+    PCA9685_OK = 0,
 } pca9685_err_t;
 
 /**

@@ -63,8 +63,7 @@ typedef struct{
 
 typedef struct{
     uint16_t delay;
-    uint16_t led_ON;
-    uint16_t led_OFF;
+    uint16_t duty_cycle;
 } pca9685_pwm_cycle_t;
 
 typedef struct{
@@ -209,12 +208,12 @@ pca9685_err_t pca9685_i2c_all_led_set(pca9685_led_state_t state);
 /**
  * @brief Set PCA9685 LEDx PWM output
  */
-pca9685_err_t pca9685_i2c_led_pwm_set(pca9685_led_pwm_t led);
+pca9685_err_t pca9685_i2c_led_pwm_set(uint8_t led_no, uint8_t d_cycle, uint8_t delay);
 
 /**
  * @brief Set PCA9685 all LEDs PWM output
  */
-pca9685_err_t pca9685_i2c_all_led_pwm_set(pca9685_pwm_cycle_t cycle);
+pca9685_err_t pca9685_i2c_all_led_pwm_set(uint8_t d_cycle, uint8_t delay);
 
 /**
  * @brief Set PCA9685 pre scale

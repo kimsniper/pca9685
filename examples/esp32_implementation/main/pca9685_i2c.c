@@ -135,33 +135,40 @@ pca9685_err_t pca9685_i2c_all_led_set(pca9685_led_state_t state)
     return err;
 }
 
-pca9685_err_t pca9685_i2c_led_pwm_set(pca9685_led_pwm_t led)
+pca9685_err_t pca9685_i2c_led_pwm_set(uint8_t led_no, uint8_t d_cycle, uint8_t delay)
 {
-    uint8_t reg = (led.led_no * 4) + LED_OFFSET_ADR;
+    uint8_t reg = (led_no * 4) + LED_OFFSET_ADR;
     uint8_t data[5];
-    uint16_t delay_tm = round(led.cycle.delay * .01f * PWM_OUTPUT_COUNTER_MAX);
-    uint16_t led_on_tm = round(led.cycle.led_ON * .01f * PWM_OUTPUT_COUNTER_MAX);
+    uint16_t delay_tm = round(delay * .01f * PWM_OUTPUT_COUNTER_MAX);
+    uint16_t led_on_tm = round(d_cycle * .01f * PWM_OUTPUT_COUNTER_MAX);
     uint16_t led_off_tm = delay_tm + led_on_tm;
 
     data[0] = reg;
     data[1] = (delay_tm - 1) & 0xFF;
     data[2] = (delay_tm - 1) >> 8;
-    data[3] = (led_off_tm - 1) & 0xFF;
-    data[4] = (led_off_tm - 1) >> 8;
+    data[3] = led_off_tm > 4096 ? (4096 - led_off_tm) & 0xFF : (led_off_tm - 1) & 0xFF;
+    data[4] = led_off_tm > 4096 ? (4096 - led_off_tm) >> 8 : (led_off_tm - 1) >> 8;
 
     pca9685_err_t err = pca9685_i2c_hal_write(I2C_ADDRESS_PCA9685, data, sizeof(data));
     return err;
 }
 
-pca9685_err_t pca9685_i2c_all_led_pwm_set(pca9685_pwm_cycle_t cycle)
+pca9685_err_t pca9685_i2c_all_led_pwm_set(uint8_t d_cycle, uint8_t delay)
 {
     uint8_t reg = REG_ALL_LED;
     uint8_t data[5];
+    uint16_t delay_tm = round(delay * .01f * PWM_OUTPUT_COUNTER_MAX);
+    uint16_t led_on_tm = round(d_cycle * .01f * PWM_OUTPUT_COUNTER_MAX);
+    uint16_t led_off_tm = delay_tm + led_on_tm;
+
+    if (led_on_tm == led_off_tm)    /* The LEDn_ON and LEDn_OFF count registers should never be programmed with the same values */
+        return PCA9685_ERR;
+
     data[0] = reg;
-    data[1] = cycle.led_ON & 0xFF;
-    data[2] = cycle.led_ON >> 8;
-    data[3] = cycle.led_OFF & 0xFF;
-    data[4] = cycle.led_OFF >> 8;
+    data[1] = (delay_tm - 1) & 0xFF;
+    data[2] = (delay_tm - 1) >> 8;
+    data[3] = led_off_tm > 4096 ? (4096 - led_off_tm) & 0xFF : (led_off_tm - 1) & 0xFF;
+    data[4] = led_off_tm > 4096 ? (4096 - led_off_tm) >> 8 : (led_off_tm - 1) >> 8;
 
     pca9685_err_t err = pca9685_i2c_hal_write(I2C_ADDRESS_PCA9685, data, sizeof(data));
     return err;
