@@ -62,6 +62,7 @@ typedef struct{
 } pca9685_mode2_t;
 
 typedef struct{
+    uint16_t delay;
     uint16_t led_ON;
     uint16_t led_OFF;
 } pca9685_pwm_cycle_t;
@@ -107,7 +108,7 @@ typedef struct{
     pca9685_output_not_enable_t outne;
     pca9685_output_change_t och;
     pca9685_output_invert_t invrt;
-} pca9685_output_set_t;
+} pca9685_output_t;
 
 /**
  * @brief PCA9685 I2C slave address
@@ -163,6 +164,7 @@ typedef struct{
 #define LED_OFFSET_ADR                  0x06
 #define SUBADR_OFFSET_ADR               0x01
 #define STAB_TIME                       1     //Stabilization time (ms)
+#define PWM_OUTPUT_COUNTER_MAX          4096  //0000h to 0FFFh (12 bit) counter
 
 /**
  * @brief Read PCA9685 mode 1 register
@@ -190,24 +192,9 @@ pca9685_err_t pca9685_i2c_restart();
 pca9685_err_t pca9685_i2c_reset();
 
 /**
- * @brief Set/Reset PCA9685 output inversion
+ * @brief PCA9685 output initialization
  */
-pca9685_err_t pca9685_i2c_output_invert(pca9685_output_invert_t val);
-
-/**
- * @brief Select PCA9685 output not enable type
- */
-pca9685_err_t pca9685_i2c_output_notenable(pca9685_output_enable_t setting);
-
-/**
- * @brief Select PCA9685 output drive type
- */
-pca9685_err_t pca9685_i2c_output_drive(pca9685_output_drive_t setting);
-
-/**
- * @brief Select PCA9685 output change type
- */
-pca9685_err_t pca9685_i2c_output_change(pca9685_output_change_t setting)
+pca9685_err_t pca9685_i2c_output_init(pca9685_output_t setting);
 
 /**
  * @brief Set PCA9685 LEDx HIGH/LOW output 
