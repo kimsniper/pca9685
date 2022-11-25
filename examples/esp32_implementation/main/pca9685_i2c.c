@@ -92,7 +92,7 @@ pca9685_err_t pca9685_i2c_sleep_mode(pca9685_sleep_mode_t sleep_mode)
         return err;
 
     data[0] = reg;
-    data[1] = mode_mask | (sleep_mode << 4);
+    data[1] = (mode_mask & 0xEF) | (sleep_mode << 4);
     printf("data[1]: %d", data[1]);
 
     err += pca9685_i2c_hal_write(I2C_ADDRESS_PCA9685, data, sizeof(data));
@@ -102,12 +102,9 @@ pca9685_err_t pca9685_i2c_sleep_mode(pca9685_sleep_mode_t sleep_mode)
 
 pca9685_err_t pca9685_i2c_reset()
 {
-    uint8_t reg = REG_RESET;
-    uint8_t data[2];
-    data[0] = reg;
-    data[1] = SWRST;
+    uint8_t data = SWRST;
 
-    pca9685_err_t err = pca9685_i2c_hal_write(I2C_ADDRESS_PCA9685, data, sizeof(data));
+    pca9685_err_t err = pca9685_i2c_hal_write(I2C_GEN_CALL_ADDRESS_PCA9685, &data, 1);
     pca9685_i2c_hal_ms_delay(STAB_TIME);
     return err;
 }

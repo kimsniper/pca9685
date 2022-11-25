@@ -120,6 +120,11 @@ typedef struct{
 #define I2C_ADDRESS_PCA9685             0x40
 
 /**
+ * @brief PCA9685 I2C geeneral call address
+ */
+#define I2C_GEN_CALL_ADDRESS_PCA9685    0x00
+
+/**
  * @brief PCA9685 R/W Command registers
  */
 #define REG_RESET                       0x00
