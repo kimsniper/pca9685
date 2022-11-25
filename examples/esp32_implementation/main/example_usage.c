@@ -45,25 +45,38 @@ void app_main(void)
 
     pca9685_i2c_hal_init();
 
-    i2c_scan();
+    //i2c_scan();
 
     err += pca9685_i2c_reset();
     ESP_LOGI(TAG, "Device reset: %s", err == PCA9685_OK ? "Successful" : "Failed");
 
-    err += pca9685_i2c_write_pre_scale(100);
+    uint8_t mode;
+    pca9685_i2c_read_mode_1(&mode);
+    ESP_LOGW(TAG, "Mode 1 Setting: %d", mode);
+
+    err += pca9685_i2c_write_pre_scale(50, 25000000);
     ESP_LOGI(TAG, "Frequency Setting: %s", err == PCA9685_OK ? "Successful" : "Failed");
 
+    //pca9685_i2c_reset();
+
     uint8_t frequency;
-    pca9685_i2c_read_pre_scale(&frequency);
-    ESP_LOGI(TAG, "Frequency: %d", frequency);
+    pca9685_i2c_read_pre_scale(&frequency, 25000000);
+    ESP_LOGI(TAG, "Frequency Reading: %d", frequency);
+
+    pca9685_i2c_sleep_mode(PCA9685_MODE_NORMAL);
+
+    pca9685_i2c_read_mode_1(&mode);
+    ESP_LOGW(TAG, "Mode 1 Setting: %d", mode);
 
     if (err == ESP_OK)
     {
         ESP_LOGI(TAG, "PCA9685 initialization successful");
         while(1)
         {
-            
-            vTaskDelay(pdMS_TO_TICKS(2000));
+            pca9685_i2c_all_led_pwm_set(5, 0);
+            vTaskDelay(pdMS_TO_TICKS(5000));
+            pca9685_i2c_all_led_pwm_set(10, 0);
+            vTaskDelay(pdMS_TO_TICKS(5000));
         }
     }
     else{

@@ -81,6 +81,25 @@ pca9685_err_t pca9685_i2c_restart()
     return err;
 }
 
+pca9685_err_t pca9685_i2c_sleep_mode(pca9685_sleep_mode_t sleep_mode)
+{
+    uint8_t reg = REG_MODE_1;
+    uint8_t data[2];
+    uint8_t mode_mask;
+    
+    pca9685_err_t err = pca9685_i2c_read_mode_1(&mode_mask);
+    if(err != PCA9685_OK)
+        return err;
+
+    data[0] = reg;
+    data[1] = mode_mask | (sleep_mode << 4);
+    printf("data[1]: %d", data[1]);
+
+    err += pca9685_i2c_hal_write(I2C_ADDRESS_PCA9685, data, sizeof(data));
+    pca9685_i2c_hal_ms_delay(STAB_TIME);
+    return err;
+}
+
 pca9685_err_t pca9685_i2c_reset()
 {
     uint8_t reg = REG_RESET;
@@ -89,6 +108,7 @@ pca9685_err_t pca9685_i2c_reset()
     data[1] = SWRST;
 
     pca9685_err_t err = pca9685_i2c_hal_write(I2C_ADDRESS_PCA9685, data, sizeof(data));
+    pca9685_i2c_hal_ms_delay(STAB_TIME);
     return err;
 }
 
@@ -180,7 +200,6 @@ pca9685_err_t pca9685_i2c_write_pre_scale(uint16_t frequency, uint32_t osc_clk_M
     uint8_t data[2];
     data[0] = reg;
     data[1] = round((double)osc_clk_Mhz / (4096 * (double)frequency)) - 1;
-    printf("data[1]: %d", data[1]);
     pca9685_err_t err = pca9685_i2c_hal_write(I2C_ADDRESS_PCA9685, data, sizeof(data));
     return err;
 }
@@ -191,7 +210,6 @@ pca9685_err_t pca9685_i2c_read_pre_scale(uint16_t *frequency, uint32_t osc_clk_M
     uint8_t data;
     pca9685_err_t err = pca9685_i2c_hal_read(I2C_ADDRESS_PCA9685, &reg, &data, 1);
     *frequency = ((double)osc_clk_Mhz) / (4096 * (((double)data) + 1)); 
-    printf("pre_scale: %d", data);
     return err;
 }
 

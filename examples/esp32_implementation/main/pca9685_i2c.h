@@ -61,6 +61,11 @@ typedef struct{
     uint8_t outne : 2;
 } pca9685_mode2_t;
 
+typedef enum{
+    PCA9685_MODE_NORMAL = 0x00,
+    PCA9685_MODE_SLEEP  = 0x01,
+} pca9685_sleep_mode_t;
+
 typedef struct{
     uint16_t delay;
     uint16_t duty_cycle;
@@ -186,6 +191,11 @@ pca9685_err_t pca9685_i2c_autoincrement(uint8_t setting);
 pca9685_err_t pca9685_i2c_restart();
 
 /**
+ * @brief PCA9685 sleep mode setting
+ */
+pca9685_err_t pca9685_i2c_sleep_mode(pca9685_sleep_mode_t sleep_mode);
+
+/**
  * @brief PCA9685 reset
  */
 pca9685_err_t pca9685_i2c_reset();
@@ -214,11 +224,6 @@ pca9685_err_t pca9685_i2c_led_pwm_set(uint8_t led_no, uint8_t d_cycle, uint8_t d
  * @brief Set PCA9685 all LEDs PWM output
  */
 pca9685_err_t pca9685_i2c_all_led_pwm_set(uint8_t d_cycle, uint8_t delay);
-
-/**
- * @brief Set PCA9685 pre scale
- */
-pca9685_err_t pca9685_i2c_write_pre_scale(uint16_t frequency);
 
 /**
  * @brief Set PCA9685 pre scale settings
