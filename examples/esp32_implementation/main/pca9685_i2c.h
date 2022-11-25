@@ -198,7 +198,7 @@ pca9685_err_t pca9685_i2c_output_init(pca9685_output_t setting);
 /**
  * @brief Set PCA9685 LEDx HIGH/LOW output 
  */
-pca9685_err_t pca9685_i2c_led_set(pca9685_led_t led);
+pca9685_err_t pca9685_i2c_led_set(uint8_t led_no, pca9685_led_state_t state);
 
 /**
  * @brief Set PCA9685 all LEDs HIGH/LOW output 
@@ -221,9 +221,14 @@ pca9685_err_t pca9685_i2c_all_led_pwm_set(uint8_t d_cycle, uint8_t delay);
 pca9685_err_t pca9685_i2c_write_pre_scale(uint16_t frequency);
 
 /**
+ * @brief Set PCA9685 pre scale settings
+ */
+pca9685_err_t pca9685_i2c_write_pre_scale(uint16_t frequency, uint32_t osc_clk_khz);
+
+/**
  * @brief Read PCA9685 pre scale settings
  */
-pca9685_err_t pca9685_i2c_read_pre_scale(uint16_t *frequency);
+pca9685_err_t pca9685_i2c_read_pre_scale(uint16_t *frequency, uint32_t osc_clk_Mhz);
 
 pca9685_err_t pca9685_i2c_write_allcall_addr(uint8_t addr);
 
