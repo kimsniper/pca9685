@@ -62,6 +62,11 @@ typedef struct{
 } pca9685_mode2_t;
 
 typedef enum{
+    PCA9685_AUTOINCR_OFF = 0x00,
+    PCA9685_AUTOINCR_ON  = 0x01,
+} pca9685_auto_incr_t;
+
+typedef enum{
     PCA9685_MODE_NORMAL = 0x00,
     PCA9685_MODE_SLEEP  = 0x01,
 } pca9685_sleep_mode_t;
@@ -188,7 +193,7 @@ pca9685_err_t pca9685_i2c_read_mode_2(uint8_t *mode);
 /**
  * @brief Set PCA9685 register auto increment in mode 1 register
  */
-pca9685_err_t pca9685_i2c_autoincrement(uint8_t setting);
+pca9685_err_t pca9685_i2c_autoincrement(pca9685_auto_incr_t setting);
 
 /**
  * @brief PCA9685 restart

@@ -34,6 +34,7 @@ void app_main(void)
     ESP_LOGI(TAG, "Frequency Reading: %d", frequency);
 
     pca9685_i2c_sleep_mode(PCA9685_MODE_NORMAL);
+    pca9685_i2c_autoincrement(PCA9685_AUTOINCR_ON);
 
     pca9685_i2c_read_mode_1(&mode);
     ESP_LOGW(TAG, "Mode 1 Setting: %d", mode);

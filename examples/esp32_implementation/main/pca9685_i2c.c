@@ -50,7 +50,7 @@ pca9685_err_t pca9685_i2c_read_mode_2(uint8_t *mode)
     return err;
 }
 
-pca9685_err_t pca9685_i2c_autoincrement(uint8_t setting)
+pca9685_err_t pca9685_i2c_autoincrement(pca9685_auto_incr_t setting)
 {
     uint8_t reg = REG_MODE_1;
     uint8_t mode_mask;
@@ -58,7 +58,7 @@ pca9685_err_t pca9685_i2c_autoincrement(uint8_t setting)
         return PCA9685_ERR;
     uint8_t data[2];
     data[0] = reg;
-    data[1] = mode_mask | (setting << 5);
+    data[1] = (mode_mask & 0xDF) | (setting << 5);
     pca9685_err_t err = pca9685_i2c_hal_write(I2C_ADDRESS_PCA9685, data, sizeof(data));
     return err;
 }
