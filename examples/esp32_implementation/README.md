@@ -36,5 +36,19 @@ See the [Getting Started Guide](https://docs.espressif.com/projects/esp-idf/en/l
 ## Example Output
 
 ```bash
-
+I (321) example_usage: Device reset: Successful
+I (331) example_usage: Frequency Setting: Successful
+I (331) example_usage: PCA9685 initialization successful
+I (341) example_usage: Servo drive: Duty cycle -> 1.0ms, Duration -> 20.0ms
+I (2341) example_usage: Servo drive: Duty cycle -> 2.0ms, Duration -> 20.0ms
+I (4341) example_usage: Servo drive: Duty cycle -> 1.0ms, Duration -> 20.0ms
+I (6341) example_usage: Servo drive: Duty cycle -> 2.0ms, Duration -> 20.0ms
+I (8341) example_usage: Servo drive: Duty cycle -> 1.0ms, Duration -> 20.0ms
+I (10341) example_usage: Servo drive: Duty cycle -> 2.0ms, Duration -> 20.0ms
+I (12341) example_usage: Servo drive: Duty cycle -> 1.0ms, Duration -> 20.0ms
+I (14341) example_usage: Servo drive: Duty cycle -> 2.0ms, Duration -> 20.0ms
+I (16341) example_usage: Servo drive: Duty cycle -> 1.0ms, Duration -> 20.0ms
+I (18341) example_usage: Servo drive: Duty cycle -> 2.0ms, Duration -> 20.0ms
+I (20341) example_usage: Servo drive: Duty cycle -> 1.0ms, Duration -> 20.0ms
+I (22341) example_usage: Servo drive: Duty cycle -> 2.0ms, Duration -> 20.0ms
 ```

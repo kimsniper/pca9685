@@ -228,12 +228,12 @@ pca9685_err_t pca9685_i2c_all_led_set(pca9685_led_state_t state);
 /**
  * @brief Set PCA9685 LEDx PWM output
  */
-pca9685_err_t pca9685_i2c_led_pwm_set(uint8_t led_no, uint8_t d_cycle, uint8_t delay);
+pca9685_err_t pca9685_i2c_led_pwm_set(uint8_t led_no, float d_cycle, float delay);
 
 /**
  * @brief Set PCA9685 all LEDs PWM output
  */
-pca9685_err_t pca9685_i2c_all_led_pwm_set(uint8_t d_cycle, uint8_t delay);
+pca9685_err_t pca9685_i2c_all_led_pwm_set(float d_cycle, float delay);
 
 /**
  * @brief Set PCA9685 pre scale settings
@@ -245,12 +245,24 @@ pca9685_err_t pca9685_i2c_write_pre_scale(uint16_t frequency, uint32_t osc_clk_k
  */
 pca9685_err_t pca9685_i2c_read_pre_scale(uint16_t *frequency, uint32_t osc_clk_Mhz);
 
+/**
+ * @brief Set PCA9685 all call address
+ */
 pca9685_err_t pca9685_i2c_write_allcall_addr(uint8_t addr);
 
+/**
+ * @brief Read PCA9685 all call address
+ */
 pca9685_err_t pca9685_i2c_read_allcall_addr(uint8_t *addr);
 
+/**
+ * @brief Set PCA9685 sub address
+ */
 pca9685_err_t pca9685_i2c_write_sub_addr(pca9685_subaddr_t subaddr);
 
+/**
+ * @brief Read PCA9685 sub address
+ */
 pca9685_err_t pca9685_i2c_read_sub_addr(pca9685_subaddr_t *subaddr);
 
 #ifdef __cplusplus

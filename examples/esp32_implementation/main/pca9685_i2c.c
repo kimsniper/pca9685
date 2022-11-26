@@ -34,8 +34,6 @@
 #include "pca9685_i2c.h" 
 #include "pca9685_i2c_hal.h" 
 
-#include "stdio.h"
-
 pca9685_err_t pca9685_i2c_read_mode_1(uint8_t *mode)
 {
     uint8_t reg = REG_MODE_1;
@@ -151,7 +149,7 @@ pca9685_err_t pca9685_i2c_all_led_set(pca9685_led_state_t state)
     return err;
 }
 
-pca9685_err_t pca9685_i2c_led_pwm_set(uint8_t led_no, uint8_t d_cycle, uint8_t delay)
+pca9685_err_t pca9685_i2c_led_pwm_set(uint8_t led_no, float d_cycle, float delay)
 {
     uint8_t reg = (led_no * 4) + LED_OFFSET_ADR;
     uint8_t data[5];
@@ -172,7 +170,7 @@ pca9685_err_t pca9685_i2c_led_pwm_set(uint8_t led_no, uint8_t d_cycle, uint8_t d
     return err;
 }
 
-pca9685_err_t pca9685_i2c_all_led_pwm_set(uint8_t d_cycle, uint8_t delay)
+pca9685_err_t pca9685_i2c_all_led_pwm_set(float d_cycle, float delay)
 {
     uint8_t reg = REG_ALL_LED;
     uint8_t data[5];
