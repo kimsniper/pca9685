@@ -93,7 +93,6 @@ pca9685_err_t pca9685_i2c_sleep_mode(pca9685_sleep_mode_t sleep_mode)
 
     data[0] = reg;
     data[1] = (mode_mask & 0xEF) | (sleep_mode << 4);
-    printf("data[1]: %d", data[1]);
 
     err += pca9685_i2c_hal_write(I2C_ADDRESS_PCA9685, data, sizeof(data));
     pca9685_i2c_hal_ms_delay(STAB_TIME);
@@ -160,11 +159,14 @@ pca9685_err_t pca9685_i2c_led_pwm_set(uint8_t led_no, uint8_t d_cycle, uint8_t d
     uint16_t led_on_tm = round(d_cycle * .01f * PWM_OUTPUT_COUNTER_MAX);
     uint16_t led_off_tm = delay_tm + led_on_tm;
 
+    if(delay_tm == 0)
+        delay_tm = 1;
+
     data[0] = reg;
     data[1] = (delay_tm - 1) & 0xFF;
     data[2] = (delay_tm - 1) >> 8;
-    data[3] = led_off_tm > 4096 ? (4096 - led_off_tm) & 0xFF : (led_off_tm - 1) & 0xFF;
-    data[4] = led_off_tm > 4096 ? (4096 - led_off_tm) >> 8 : (led_off_tm - 1) >> 8;
+    data[3] = led_off_tm > PWM_OUTPUT_COUNTER_MAX ? (PWM_OUTPUT_COUNTER_MAX - led_off_tm) & 0xFF : (led_off_tm - 1) & 0xFF;
+    data[4] = led_off_tm > PWM_OUTPUT_COUNTER_MAX ? (PWM_OUTPUT_COUNTER_MAX - led_off_tm) >> 8 : (led_off_tm - 1) >> 8;
 
     pca9685_err_t err = pca9685_i2c_hal_write(I2C_ADDRESS_PCA9685, data, sizeof(data));
     return err;
@@ -184,8 +186,8 @@ pca9685_err_t pca9685_i2c_all_led_pwm_set(uint8_t d_cycle, uint8_t delay)
     data[0] = reg;
     data[1] = (delay_tm - 1) & 0xFF;
     data[2] = (delay_tm - 1) >> 8;
-    data[3] = led_off_tm > 4096 ? (4096 - led_off_tm) & 0xFF : (led_off_tm - 1) & 0xFF;
-    data[4] = led_off_tm > 4096 ? (4096 - led_off_tm) >> 8 : (led_off_tm - 1) >> 8;
+    data[3] = led_off_tm > PWM_OUTPUT_COUNTER_MAX ? (PWM_OUTPUT_COUNTER_MAX - led_off_tm) & 0xFF : (led_off_tm - 1) & 0xFF;
+    data[4] = led_off_tm > PWM_OUTPUT_COUNTER_MAX ? (PWM_OUTPUT_COUNTER_MAX - led_off_tm) >> 8 : (led_off_tm - 1) >> 8;
 
     pca9685_err_t err = pca9685_i2c_hal_write(I2C_ADDRESS_PCA9685, data, sizeof(data));
     return err;

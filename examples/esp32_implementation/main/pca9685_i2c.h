@@ -178,7 +178,7 @@ typedef struct{
 #define LED_OFFSET_ADR                  0x06
 #define SUBADR_OFFSET_ADR               0x01
 #define STAB_TIME                       1     //Stabilization time (ms)
-#define PWM_OUTPUT_COUNTER_MAX          4096  //0000h to 0FFFh (12 bit) counter
+#define PWM_OUTPUT_COUNTER_MAX          0x1000  //0000h to 0FFFh (12 bit) counter
 
 /**
  * @brief Read PCA9685 mode 1 register
@@ -186,7 +186,7 @@ typedef struct{
 pca9685_err_t pca9685_i2c_read_mode_1(uint8_t *mode);
 
 /**
- * @brief Write PCA9685 mode 1 register
+ * @brief Write PCA9685 mode 2 register
  */
 pca9685_err_t pca9685_i2c_read_mode_2(uint8_t *mode);
 
