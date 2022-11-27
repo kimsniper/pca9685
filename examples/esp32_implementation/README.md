@@ -5,7 +5,7 @@ ESP-IDF template used for this project: https://github.com/espressif/esp-idf/tre
 
 ## Overview
 
-This example demonstrates usage of PCA9685 for servo/LED PWM control.
+This example demonstrates usage of PCA9685 for servo PWM control.
 
 ### Hardware Required
 
