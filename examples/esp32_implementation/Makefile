@@ -3,6 +3,6 @@
 # project subdirectory.
 #
 
-PROJECT_NAME := pca9685
+PROJECT_NAME := pca9685-servo
 
 include $(IDF_PATH)/make/project.mk

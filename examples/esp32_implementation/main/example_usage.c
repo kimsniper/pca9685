@@ -44,23 +44,23 @@ void app_main(void)
 
     pca9685_i2c_hal_init();
 
-    err += pca9685_i2c_reset();
+    err += pca9685_i2c_reset(); /* Perform device reset */
     ESP_LOGI(TAG, "Device reset: %s", err == PCA9685_OK ? "Successful" : "Failed");
 
     err += pca9685_i2c_write_pre_scale(SERVO_PWM_FREQ, PCA9685_OSC_CLK); /* Setting frequency to 50 Hz (200ms) */
     ESP_LOGI(TAG, "Frequency Setting: %s", err == PCA9685_OK ? "Successful" : "Failed");
 
     pca9685_i2c_sleep_mode(PCA9685_MODE_NORMAL);
-    pca9685_i2c_autoincrement(PCA9685_AUTOINCR_ON);
+    pca9685_i2c_autoincrement(PCA9685_AUTOINCR_ON); /* Register increment every read/write */
 
     if (err == ESP_OK)
     {
         ESP_LOGI(TAG, "PCA9685 initialization successful");
         while(1)
         {
-            servo_pwm_drive(SERVO_OUTPUT_PIN_1, 1);
+            servo_pwm_drive(SERVO_OUTPUT_PIN_1, 1); /* Drive servo at 1 ms */
             vTaskDelay(pdMS_TO_TICKS(2000));
-            servo_pwm_drive(SERVO_OUTPUT_PIN_1, 2);
+            servo_pwm_drive(SERVO_OUTPUT_PIN_1, 2); /* Drive servo at 2 ms */
             vTaskDelay(pdMS_TO_TICKS(2000));
         }
     }

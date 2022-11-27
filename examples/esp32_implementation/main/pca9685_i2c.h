@@ -39,11 +39,6 @@ extern "C" {
 #include "pca9685_i2c_hal.h" 
 
 typedef struct{
-    uint8_t addr_no;
-    uint8_t address;
-} pca9685_subaddr_t;
-
-typedef struct{
     uint8_t restart : 1;
     uint8_t extclk : 1;
     uint8_t auto_increment : 1;
@@ -70,6 +65,17 @@ typedef enum{
     PCA9685_MODE_NORMAL = 0x00,
     PCA9685_MODE_SLEEP  = 0x01,
 } pca9685_sleep_mode_t;
+
+typedef enum{
+    PCA9685_ADDR_NORESPOND = 0x00,
+    PCA9685_ADDR_RESPOND = 0x01,
+} pca9685_addr_resp_t;
+
+typedef enum{
+    PCA9685_SUB_ADDR_1 = 0x03,
+    PCA9685_SUB_ADDR_2 = 0x02,
+    PCA9685_SUB_ADDR_3 = 0x01,
+} pca9685_subaddr_no_t;
 
 typedef struct{
     uint16_t delay;
@@ -155,11 +161,6 @@ typedef struct{
 #define MODE_1_AUTO_INCREMENT_DIS       0x00
 #define MODE_1_SLEEP_NORMAL             0x01
 #define MODE_1_SLEEP_LOW_POWER          0x00
-#define MODE_1_ADDR_RESPOND             0x01
-#define MODE_1_ADDR_NORESPOND           0x00
-#define MODE_1_SUB_ADDR_1               0x03
-#define MODE_1_SUB_ADDR_2               0x02
-#define MODE_1_SUB_ADDR_3               0x01
 
 /**
  * @brief PCA9685 MODE_2 register bit description
@@ -238,32 +239,42 @@ pca9685_err_t pca9685_i2c_all_led_pwm_set(float d_cycle, float delay);
 /**
  * @brief Set PCA9685 pre scale settings
  */
-pca9685_err_t pca9685_i2c_write_pre_scale(uint16_t frequency, uint32_t osc_clk_khz);
+pca9685_err_t pca9685_i2c_write_pre_scale(double frequency, double osc_clk_hz);
 
 /**
  * @brief Read PCA9685 pre scale settings
  */
-pca9685_err_t pca9685_i2c_read_pre_scale(uint16_t *frequency, uint32_t osc_clk_Mhz);
+pca9685_err_t pca9685_i2c_read_pre_scale(double *frequency, double osc_clk_hz);
 
 /**
  * @brief Set PCA9685 all call address
  */
-pca9685_err_t pca9685_i2c_write_allcall_addr(uint8_t addr);
+pca9685_err_t pca9685_i2c_write_allcall_addr(uint8_t allcall_addr);
 
 /**
  * @brief Read PCA9685 all call address
  */
-pca9685_err_t pca9685_i2c_read_allcall_addr(uint8_t *addr);
+pca9685_err_t pca9685_i2c_read_allcall_addr(uint8_t *allcall_addr);
 
 /**
  * @brief Set PCA9685 sub address
  */
-pca9685_err_t pca9685_i2c_write_sub_addr(pca9685_subaddr_t subaddr);
+pca9685_err_t pca9685_i2c_write_sub_addr(pca9685_subaddr_no_t addr_no, uint8_t sub_addr);
 
 /**
  * @brief Read PCA9685 sub address
  */
-pca9685_err_t pca9685_i2c_read_sub_addr(pca9685_subaddr_t *subaddr);
+pca9685_err_t pca9685_i2c_read_sub_addr(pca9685_subaddr_no_t addr_no, uint8_t *sub_addr);
+
+/**
+ * @brief Set PCA9685 sub address response type
+ */
+pca9685_err_t pca9685_i2c_sub_addr_resp(pca9685_subaddr_no_t sub_addr, pca9685_addr_resp_t resp);
+
+/**
+ * @brief Set PCA9685 all call address response type
+ */
+pca9685_err_t pca9685_i2c_allcall_address_resp(pca9685_addr_resp_t resp);
 
 #ifdef __cplusplus
 }
