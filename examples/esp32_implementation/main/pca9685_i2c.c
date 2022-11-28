@@ -209,7 +209,7 @@ pca9685_err_t pca9685_i2c_write_pre_scale(pca9685_dev_t dev, double frequency, d
     uint8_t reg = REG_PRE_SCALE;
     uint8_t data[2];
     data[0] = reg;
-    data[1] = round(osc_clk_hz / (4096 * frequency)) - 1;
+    data[1] = round(osc_clk_hz / (PWM_OUTPUT_COUNTER_MAX * frequency)) - 1;
     pca9685_err_t err = pca9685_i2c_hal_write(dev.i2c_addr, data, sizeof(data));
     return err;
 }
@@ -219,7 +219,7 @@ pca9685_err_t pca9685_i2c_read_pre_scale(pca9685_dev_t dev, double *frequency, d
     uint8_t reg = REG_PRE_SCALE;
     uint8_t data;
     pca9685_err_t err = pca9685_i2c_hal_read(dev.i2c_addr, &reg, &data, 1);
-    *frequency = (osc_clk_hz) / (4096 * ((data) + 1)); 
+    *frequency = (osc_clk_hz) / (PWM_OUTPUT_COUNTER_MAX * ((data) + 1)); 
     return err;
 }
 
