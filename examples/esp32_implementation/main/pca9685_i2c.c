@@ -51,12 +51,12 @@ pca9685_err_t pca9685_i2c_read_mode_2(pca9685_dev_t dev, uint8_t *mode)
 pca9685_err_t pca9685_i2c_clock(pca9685_dev_t dev, pca9685_auto_extclk_t clk)
 {
     uint8_t reg = REG_MODE_1;
-    uint8_t mode_mask;
-    if(pca9685_i2c_read_mode_1(dev, &mode_mask) != PCA9685_OK)
+    uint8_t mode;
+    if(pca9685_i2c_read_mode_1(dev, &mode) != PCA9685_OK)
         return PCA9685_ERR;
     uint8_t data[2];
     data[0] = reg;
-    data[1] = (mode_mask & 0xBF) | (clk << 6);
+    data[1] = (mode & 0xBF) | (clk << 6);
     pca9685_err_t err = pca9685_i2c_hal_write(dev.i2c_addr, data, sizeof(data));
     return err;
 }
@@ -64,12 +64,12 @@ pca9685_err_t pca9685_i2c_clock(pca9685_dev_t dev, pca9685_auto_extclk_t clk)
 pca9685_err_t pca9685_i2c_autoincrement(pca9685_dev_t dev, pca9685_auto_incr_t setting)
 {
     uint8_t reg = REG_MODE_1;
-    uint8_t mode_mask;
-    if(pca9685_i2c_read_mode_1(dev, &mode_mask) != PCA9685_OK)
+    uint8_t mode;
+    if(pca9685_i2c_read_mode_1(dev, &mode) != PCA9685_OK)
         return PCA9685_ERR;
     uint8_t data[2];
     data[0] = reg;
-    data[1] = (mode_mask & 0xDF) | (setting << 5);
+    data[1] = (mode & 0xDF) | (setting << 5);
     pca9685_err_t err = pca9685_i2c_hal_write(dev.i2c_addr, data, sizeof(data));
     return err;
 }
@@ -77,17 +77,17 @@ pca9685_err_t pca9685_i2c_autoincrement(pca9685_dev_t dev, pca9685_auto_incr_t s
 pca9685_err_t pca9685_i2c_restart(pca9685_dev_t dev)
 {
     uint8_t reg = REG_MODE_1;
-    uint8_t mode_mask;
-    if(pca9685_i2c_read_mode_1(dev, &mode_mask) != PCA9685_OK && !(mode_mask & (1 << 7)))
+    uint8_t mode;
+    if(pca9685_i2c_read_mode_1(dev, &mode) != PCA9685_OK && !(mode & (1 << 7)))
         return PCA9685_ERR;
     uint8_t data[2];
     data[0] = reg;
-    data[1] = mode_mask | (mode_mask & ~(1 << 4));
+    data[1] = mode | (mode & ~(1 << 4));
     pca9685_err_t err = pca9685_i2c_hal_write(dev.i2c_addr, data, sizeof(data));
     pca9685_i2c_hal_ms_delay(STAB_TIME);
-    if(pca9685_i2c_read_mode_1(dev, &mode_mask) != PCA9685_OK)
+    if(pca9685_i2c_read_mode_1(dev, &mode) != PCA9685_OK)
         return PCA9685_ERR;
-    data[1] = mode_mask | (mode_mask & (1 << 7));
+    data[1] = mode | (mode & (1 << 7));
     err += pca9685_i2c_hal_write(dev.i2c_addr, data, sizeof(data));
     return err;
 }
@@ -96,14 +96,14 @@ pca9685_err_t pca9685_i2c_sleep_mode(pca9685_dev_t dev, pca9685_sleep_mode_t sle
 {
     uint8_t reg = REG_MODE_1;
     uint8_t data[2];
-    uint8_t mode_mask;
+    uint8_t mode;
     
-    pca9685_err_t err = pca9685_i2c_read_mode_1(dev, &mode_mask);
+    pca9685_err_t err = pca9685_i2c_read_mode_1(dev, &mode);
     if(err != PCA9685_OK)
         return err;
 
     data[0] = reg;
-    data[1] = (mode_mask & 0xEF) | (sleep_mode << 4);
+    data[1] = (mode & 0xEF) | (sleep_mode << 4);
 
     err += pca9685_i2c_hal_write(dev.i2c_addr, data, sizeof(data));
     pca9685_i2c_hal_ms_delay(STAB_TIME);
@@ -123,14 +123,14 @@ pca9685_err_t pca9685_i2c_output_init(pca9685_dev_t dev, pca9685_output_t output
 {
     uint8_t reg = REG_MODE_2;
     uint8_t data[2];
-    uint8_t mode_mask;
+    uint8_t mode;
     
-    pca9685_err_t err = pca9685_i2c_read_mode_2(dev, &mode_mask);
+    pca9685_err_t err = pca9685_i2c_read_mode_2(dev, &mode);
     if(err != PCA9685_OK)
         return err;
 
     data[0] = reg;
-    data[1] = (mode_mask & 0xE0) | (output.invrt << 4) | (output.och << 3) | (output.outdrv << 2) | (output.outne << 1);
+    data[1] = (mode & 0xE0) | (output.invrt << 4) | (output.och << 3) | (output.outdrv << 2) | (output.outne << 1);
 
     err += pca9685_i2c_hal_write(dev.i2c_addr, data, sizeof(data));
     return err;
@@ -268,8 +268,8 @@ pca9685_err_t pca9685_i2c_read_sub_addr(pca9685_dev_t dev, pca9685_subaddr_no_t 
 pca9685_err_t pca9685_i2c_sub_addr_resp(pca9685_dev_t dev, pca9685_subaddr_no_t sub_addr, pca9685_addr_resp_t resp)
 {
     uint8_t reg = REG_MODE_1;
-    uint8_t mode_mask;
-    if(pca9685_i2c_read_mode_1(dev, &mode_mask) != PCA9685_OK)
+    uint8_t mode;
+    if(pca9685_i2c_read_mode_1(dev, &mode) != PCA9685_OK)
         return PCA9685_ERR;
 
     if(sub_addr == 1)
@@ -279,7 +279,7 @@ pca9685_err_t pca9685_i2c_sub_addr_resp(pca9685_dev_t dev, pca9685_subaddr_no_t 
 
     uint8_t data[2];
     data[0] = reg;
-    data[1] = (mode_mask & ~(1 << sub_addr)) | (resp << sub_addr);
+    data[1] = (mode & ~(1 << sub_addr)) | (resp << sub_addr);
     pca9685_err_t err = pca9685_i2c_hal_write(dev.i2c_addr, data, sizeof(data));
     return err;
 }
@@ -287,12 +287,12 @@ pca9685_err_t pca9685_i2c_sub_addr_resp(pca9685_dev_t dev, pca9685_subaddr_no_t 
 pca9685_err_t pca9685_i2c_allcall_address_resp(pca9685_dev_t dev, pca9685_addr_resp_t resp)
 {
     uint8_t reg = REG_MODE_1;
-    uint8_t mode_mask;
-    if(pca9685_i2c_read_mode_1(dev, &mode_mask) != PCA9685_OK)
+    uint8_t mode;
+    if(pca9685_i2c_read_mode_1(dev, &mode) != PCA9685_OK)
         return PCA9685_ERR;
     uint8_t data[2];
     data[0] = reg;
-    data[1] = (mode_mask & ~(1 << 0)) | resp;
+    data[1] = (mode & ~(1 << 0)) | resp;
     pca9685_err_t err = pca9685_i2c_hal_write(dev.i2c_addr, data, sizeof(data));
     return err;
 }
