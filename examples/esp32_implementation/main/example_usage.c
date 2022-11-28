@@ -114,9 +114,9 @@ void app_main(void)
         while(1)
         {
             servo_pwm_drive(pca9685_1, SERVO_OUTPUT_PIN_1, 1); /* Drive servo at 1 ms */
-            vTaskDelay(pdMS_TO_TICKS(2000));
+            pca9685_i2c_hal_ms_delay(2000);
             servo_pwm_drive(pca9685_1, SERVO_OUTPUT_PIN_1, 2); /* Drive servo at 2 ms */
-            vTaskDelay(pdMS_TO_TICKS(2000));
+            pca9685_i2c_hal_ms_delay(2000);
         }
     }
     else{
