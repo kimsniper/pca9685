@@ -35,9 +35,9 @@
 
 /*  I2C User Defines  */
 
-pca9685_err_t pca9685_i2c_hal_init()
+int16_t pca9685_i2c_hal_init()
 {
-    int err = PCA9685_OK;
+    int16_t err = PCA9685_OK;
 
     //User implementation here
 
@@ -45,9 +45,9 @@ pca9685_err_t pca9685_i2c_hal_init()
     return err == PCA9685_OK ? PCA9685_OK :  PCA9685_ERR;
 }
 
-pca9685_err_t pca9685_i2c_hal_read(uint8_t address, uint8_t *reg, uint8_t *data, uint16_t count)
+int16_t pca9685_i2c_hal_read(uint8_t address, uint8_t *reg, uint8_t *data, uint16_t count)
 {
-    int err = PCA9685_OK;
+    int16_t err = PCA9685_OK;
 
     //User implementation here
 
@@ -55,9 +55,9 @@ pca9685_err_t pca9685_i2c_hal_read(uint8_t address, uint8_t *reg, uint8_t *data,
     return err == PCA9685_OK ? PCA9685_OK :  PCA9685_ERR;
 }
 
-pca9685_err_t pca9685_i2c_hal_write(uint8_t address, uint8_t *data, uint16_t count)
+int16_t pca9685_i2c_hal_write(uint8_t address, uint8_t *data, uint16_t count)
 {
-    int err = PCA9685_OK;
+    int16_t err = PCA9685_OK;
 
     //User implementation here
 
@@ -66,7 +66,6 @@ pca9685_err_t pca9685_i2c_hal_write(uint8_t address, uint8_t *data, uint16_t cou
 }
 
 void pca9685_i2c_hal_ms_delay(uint32_t ms) {
-    
     //User implementation here
 
 }
